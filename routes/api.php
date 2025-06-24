@@ -14,6 +14,8 @@ Route::Post('/register',[LoginController::class,'register']);
 Route::Post('/login',[LoginController::class,'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
+Route::Post('/logout',[LoginController::class, 'logout']);
 Route::Post('/add-bill',[MainController::class,'add_bill']);
 Route::get('/view-bills',[AdminController::class,'view_bills']);
+Route::get('/update\{id}',[AdminController::class,'update']);
 });

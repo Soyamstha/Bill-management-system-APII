@@ -41,4 +41,10 @@ class LoginController extends Controller
         $token = $user->createToken('API Token')->plainTextToken;
         return apiSuccessResponse($user, 'Login successful', $token);
     }
+    function logout()
+    {
+        $user = auth()->user();
+        $user->tokens()->delete();
+        return apiSuccessResponse(null, 'Logged out successfully');
+    }
 }
