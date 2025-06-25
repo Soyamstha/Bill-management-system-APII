@@ -13,7 +13,7 @@ class AdminController extends Controller
         $user = auth()->user();
         if($user->is_admin == 1)
         {
-            $pagination =Bill::orderBy('created_at', 'desc')->paginate(10);
+            $pagination =Bill::orderBy('created_at', 'desc')->paginate(6);
             return BillResource::collection($pagination);
         }
         else
