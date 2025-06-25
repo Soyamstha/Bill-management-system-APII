@@ -20,7 +20,15 @@ class BillResource extends JsonResource
         'bill_name' => $this->bill_name,
         'description' => $this->description,
         'status'=>$this->status,
-        'photo' => $this->getFirstMedia('preview'),
+        // 'photo' => $this->getFirstMedia('preview'),
+        'photos' => $this->getMedia('preview')->map(function ($media) {
+        return [
+            'id' => $media->id,
+            'url' => $media->getUrl(),
+            'name' => $media->name,
+            'file_name' => $media->file_name,
+        ];
+        }),
     ];
     }
 }

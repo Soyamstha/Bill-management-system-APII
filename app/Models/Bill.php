@@ -23,7 +23,7 @@ class Bill extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('preview')
-            ->singleFile()
+            // ->singleFile()
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/jpg', 'image/gif'])
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('photo')

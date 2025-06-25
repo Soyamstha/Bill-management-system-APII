@@ -6,17 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Http;
 
 class FcmNotification extends Notification
 {
     use Queueable;
 
+    protected $title;
+    protected $message;
+    protected $deviceToken;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($title, $message, $deviceToken)
     {
-        //
+        $this->title = $title;
+        $this->message = $message;
+        $this->deviceToken = $deviceToken;
     }
 
     /**
@@ -26,7 +33,7 @@ class FcmNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['fcm'];
     }
 
     /**
@@ -50,5 +57,24 @@ class FcmNotification extends Notification
         return [
             //
         ];
+    }
+    public function toFcm($notifiable)
+    {
+        $SERVER_API_KEY = config('services.fcm.server_key');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'key=' . $SERVER_API_KEY,
+            'Content-Type' => 'application/json',
+        ])->post('https://fcm.googleapis.com/fcm/send', [
+            'to' => $this->deviceToken,
+            'notification' => [
+                'title' => $this->title,
+                'body' => $this->message,
+                'sound' => 'default',
+            ],
+            'priority' => 'high',
+        ]);
+
+        return $response->json(['message'=>'notification have been send']);
     }
 }

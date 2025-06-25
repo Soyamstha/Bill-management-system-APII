@@ -24,21 +24,15 @@ class AdminController extends Controller
     function update(Request $request,$id)
     {
         $bill = Bill::find($id);
-        if($request->data=='accept')
-        {
-            $bill->status=$request->data;
-            $bill->save();
-            return response()->json(['message'=>'update successful']);
-        }
-        elseif($request->data=='reject')
-        {
-            $bill->status=$request->data;
-            $bill->save();
-            return response()->json(['message'=>'update successful']);
-        }
-        else
+        $request->validate([
+            'data'=>'required|in:Accepted,Rejected'
+        ]);
+        if(!$bill)
         {
             return response()->json(['message'=>'Bill not found']);
         }
+        $bill->status=$request->data;
+        $bill->save();
+        return response()->json(['message'=>'update successful']);
     }
 }
